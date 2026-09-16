@@ -1386,7 +1386,7 @@ ul, ol { list-style: none; }
   inset: 0;
   margin: 0;
   opacity: 0;
-  transition: opacity 1.5s var(--ease);
+  transition: opacity 1.1s var(--ease);
   pointer-events: none;
 }
 .shot.is-on { opacity: 1; pointer-events: auto; }
@@ -1414,7 +1414,7 @@ ul, ol { list-style: none; }
   background-repeat: no-repeat;
   filter: saturate(0.88) contrast(1.04) brightness(0.94);
   transform: scale(1);
-  transition: transform 7s linear;
+  transition: transform 5s linear;
 }
 .shot.is-on .shot__img { transform: scale(1.035); }
 
@@ -1438,7 +1438,7 @@ ul, ol { list-style: none; }
   gap: 0.5rem;
   transform: translateY(14px);
   opacity: 0;
-  transition: transform 1.2s var(--ease) 0.3s, opacity 1.2s var(--ease) 0.3s;
+  transition: transform 0.9s var(--ease) 0.25s, opacity 0.9s var(--ease) 0.25s;
 }
 .shot.is-on .shot__cap { transform: none; opacity: 1; }
 .shot__t {
@@ -1510,7 +1510,7 @@ ul, ol { list-style: none; }
   transform: scaleX(0);
 }
 .tick.is-done::after { transform: scaleX(1); }
-.tick.is-live::after { animation: tickFill var(--shot-dur, 5600ms) linear forwards; }
+.tick.is-live::after { animation: tickFill var(--shot-dur, 3900ms) linear forwards; }
 @keyframes tickFill { from { transform: scaleX(0); } to { transform: scaleX(1); } }
 .showcase.is-held .tick.is-live::after { animation-play-state: paused; }
 .showcase.is-held .shot.is-on .shot__img { transition: none; }

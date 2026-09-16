@@ -578,9 +578,11 @@
       paint();
       if (resume) { start(); }
     };
+    let inView = true;
     const start = () => {
       clearTimeout(timer);
       if (REDUCED) { return; }          // no auto-advance when motion is reduced
+      if (!inView || document.hidden) { return; }
       timer = setTimeout(() => go(at + 1), DUR);
     };
     const hold = (on) => {
@@ -592,9 +594,14 @@
     $('[data-shot-prev]', el)?.addEventListener('click', () => go(at - 1));
     ticks.forEach((t, i) => t.addEventListener('click', () => go(i)));
 
-    // Pause while someone is actually looking at, or interacting with, it.
-    el.addEventListener('pointerenter', () => hold(true));
-    el.addEventListener('pointerleave', () => hold(false));
+    // Hover-pause is scoped to the controls, NOT the whole band. The band is
+    // full-bleed and ~700px tall, so simply scrolling past leaves the cursor
+    // inside it — bound to `el` this fired pointerenter and the reel sat frozen
+    // until you moved the mouse out or clicked, which read as "it won't start".
+    const ui = $('.showcase__ui', el);
+    ui?.addEventListener('pointerenter', () => hold(true));
+    ui?.addEventListener('pointerleave', () => hold(false));
+    // Keyboard focus still pauses anywhere in the component.
     el.addEventListener('focusin', () => hold(true));
     el.addEventListener('focusout', () => hold(false));
 
@@ -617,8 +624,11 @@
     // Don't burn timers or bandwidth while the reel is off-screen.
     if ('IntersectionObserver' in window) {
       new IntersectionObserver((entries) => {
-        entries.forEach((en) => (en.isIntersecting ? start() : clearTimeout(timer)));
-      }, { threshold: 0.25 }).observe(el);
+        entries.forEach((en) => {
+          inView = en.isIntersecting;
+          inView ? start() : clearTimeout(timer);
+        });
+      }, { threshold: 0.2 }).observe(el);
     }
     document.addEventListener('visibilitychange', () => {
       document.hidden ? clearTimeout(timer) : start();

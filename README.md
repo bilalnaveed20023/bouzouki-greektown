@@ -173,8 +173,9 @@ leave, and a website is more permanent than an Instagram post.
 
 ## The reel
 
-`#reel` on the homepage, between section 02 (The Room) and 03 (The Week): an
-auto-advancing band of eight dancer photographs, 5.6s per frame.
+`#reel` on the homepage, sitting between section 01 (The House) and 02 (The
+Week), directly after the figure-column-figure divider: an auto-advancing band
+of eight dancer photographs, 3.9s per frame.
 
 Notes for whoever touches it next:
 
@@ -185,9 +186,17 @@ Notes for whoever touches it next:
 - Only the current frame and its two neighbours get a `background-image`, set
   from `data-shot` in JS. Eight full-bleed photographs do not all download on
   first paint.
-- It pauses on hover, on focus, while the tab is hidden, and while it is
-  scrolled off-screen. Under `prefers-reduced-motion` it does not auto-advance
-  at all — arrows and ticks still work.
+- **Hover-pause is scoped to `.showcase__ui`, not the whole band.** The band is
+  full-bleed and ~700px tall, so simply scrolling past leaves the cursor inside
+  it. Bound to the section, `pointerenter` fired and the reel sat frozen until
+  you moved the mouse out or clicked — which read as "it won't start on its
+  own". Do not move those listeners back onto the section.
+- It also pauses on keyboard focus, while the tab is hidden, and while scrolled
+  off-screen. Under `prefers-reduced-motion` it does not auto-advance at all —
+  arrows and ticks still work.
+- Note when testing in a headless or hidden browser pane: `document.hidden` is
+  `true` there, so the background-tab guard in `start()` correctly prevents any
+  advance and the reel will look broken. It is not.
 - Swipe on touch, arrow keys when hovered or focused, and the ticks along the
   bottom are both progress bar and jump-to control.
 
