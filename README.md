@@ -171,6 +171,21 @@ which is the intended use. Before launch confirm the photographer's rights are
 settled and that anyone identifiable in them is still content to appear — people
 leave, and a website is more permanent than an Instagram post.
 
+## Marquees — pace them by width, never by a fixed duration
+
+`@keyframes slide` translates by `-100%` of the **track**, so with a fixed
+`animation-duration` a wider track simply moves faster. `marquees()` therefore
+measures the assembled track and derives the duration from a target px/sec
+(58, or 95 for `.marquee__track--fast`). Do not put a fixed duration back.
+
+This was a real bug: `marquees()` runs at `DOMContentLoaded`, before the web
+fonts arrive, so it measured fallback metrics, over-duplicated the content and
+built a track far wider than needed — which on a fixed duration read as the
+rails racing. A refresh "fixed" it only because the fonts were then cached and
+the measurement was right. It now rebuilds on `document.fonts.ready` and on
+resize, reseeding from the authored markup each time (`marqueeSeed`) so repeat
+builds cannot compound clones.
+
 ## The reel
 
 `#reel` on the homepage, sitting between section 01 (The House) and 02 (The

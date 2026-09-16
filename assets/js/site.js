@@ -173,9 +173,18 @@
     return new Promise((resolve) => {
       $('[data-gate-yes]', el)?.addEventListener('click', () => {
         store.set(GATE_KEY, '1');
+        // Release the scroll lock and resolve at once. Waiting for the fade to
+        // finish left `overflow: hidden` on for its full 620ms, so the page felt
+        // stuck for a beat after accepting — most obvious on a phone, where a
+        // swipe that does nothing reads as a broken page. The panel stays for
+        // the fade purely as a visual, with pointer events off so it cannot
+        // swallow a tap meant for the page underneath.
+        el.style.pointerEvents = 'none';
         el.style.transition = 'opacity .6s var(--ease)';
         el.style.opacity = '0';
-        setTimeout(() => { el.remove(); unlock(); resolve(); }, 620);
+        unlock();
+        resolve();
+        setTimeout(() => el.remove(), 620);
       });
       $('[data-gate-no]', el)?.addEventListener('click', () => {
         el.innerHTML =
@@ -300,24 +309,57 @@
   }
 
   /* ------------------------------------------------------------------------
-     9. MARQUEE — clone the track until it covers twice the viewport
+     9. MARQUEE — fill the rail, then pace it by measured width
      --------------------------------------------------------------------- */
+  const marqueeSeed = new Map();
+
   function marquees() {
-    $$('.marquee').forEach((m) => {
+    const bars = $$('.marquee');
+    if (!bars.length) { return; }
+
+    const build = (m) => {
+      const first = $('.marquee__track', m);
+      if (!first) { return; }
+
+      // Restore the authored content before re-measuring, so a rebuild never
+      // compounds the clones left by the previous one.
+      if (!marqueeSeed.has(m)) { marqueeSeed.set(m, first.innerHTML); }
+      $$('.marquee__track', m).slice(1).forEach((t) => t.remove());
       const track = $('.marquee__track', m);
-      if (!track) { return; }
-      const clone = () => {
-        const c = track.cloneNode(true);
-        c.setAttribute('aria-hidden', 'true');
-        m.appendChild(c);
-      };
+      track.innerHTML = marqueeSeed.get(m);
+
+      const rail = m.offsetWidth || innerWidth;
       let guard = 0;
-      while (track.scrollWidth < m.offsetWidth * 2 && guard < 6) {
+      while (track.scrollWidth < rail * 2 && guard < 8) {
         track.append(...Array.from(track.children).map((n) => n.cloneNode(true)));
         guard++;
       }
-      clone();
-    });
+      const copy = track.cloneNode(true);
+      copy.setAttribute('aria-hidden', 'true');
+      m.appendChild(copy);
+
+      // The keyframe translates by -100% of the TRACK, so with a fixed duration
+      // a wider track simply moves faster. Derive the duration from the measured
+      // width instead: every rail then runs at the same px/sec no matter how
+      // many copies it took to fill, and mis-measurement can no longer show up
+      // as speed.
+      const fast = track.classList.contains('marquee__track--fast');
+      const secs = Math.max(8, track.scrollWidth / (fast ? 95 : 58));
+      [track, copy].forEach((t) => { t.style.animationDuration = `${secs.toFixed(1)}s`; });
+    };
+
+    const buildAll = () => bars.forEach(build);
+    buildAll();
+
+    // Web fonts change the text metrics. Measuring before they arrive built a
+    // track far wider than needed, which is exactly why the rails raced on a
+    // cold load and behaved after a refresh, when the fonts were cached.
+    if (document.fonts && document.fonts.ready) {
+      document.fonts.ready.then(buildAll).catch(() => {});
+    }
+
+    let rt = 0;
+    addEventListener('resize', () => { clearTimeout(rt); rt = setTimeout(buildAll, 250); });
   }
 
   /* ------------------------------------------------------------------------
