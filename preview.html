@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Bouzouki Phone Check</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:opsz,wght@6..96,500;6..96,700&family=Jost:wght@300;400;500&display=swap">
+<style>
+  /* A review harness for the site next to it, so it borrows that site's
+     palette and faces deliberately. Dark only — it is showing a dark site. */
+  :root {
+    --ink:      #0b0a0e;
+    --ink-2:    #15121c;
+    --marble:   #f2ece3;
+    --muted:    #8d8679;
+    --brass:    #c8a04a;
+    --hairline: rgba(242, 236, 227, 0.12);
+
+    --phone-w: 390px;
+    --phone-h: 844px;
+    --scale: 0.78;
+
+    color-scheme: dark;
+  }
+
+  * { box-sizing: border-box; }
+  html, body { margin: 0; }
+
+  body {
+    background: var(--ink);
+    color: var(--marble);
+    font-family: "Jost", "Helvetica Neue", Arial, sans-serif;
+    font-weight: 300;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .head {
+    padding: clamp(1.5rem, 4vw, 2.75rem) clamp(1rem, 4vw, 2.5rem) clamp(1rem, 2vw, 1.5rem);
+    border-bottom: 1px solid var(--hairline);
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem 2.5rem;
+    align-items: flex-end;
+    justify-content: space-between;
+  }
+  .head h1 {
+    font-family: "Bodoni Moda", Didot, "Times New Roman", serif;
+    font-weight: 700;
+    font-size: clamp(1.6rem, 4vw, 2.5rem);
+    line-height: 1.05;
+    letter-spacing: -0.01em;
+    margin: 0.4rem 0 0;
+    text-wrap: balance;
+  }
+  .eyebrow {
+    font-size: 0.6875rem;
+    font-weight: 500;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--brass);
+    margin: 0;
+  }
+  .meta {
+    font-size: 0.8125rem;
+    color: var(--muted);
+    max-width: 30rem;
+    margin: 0;
+  }
+  .meta strong { color: var(--marble); font-weight: 400; }
+
+  /* Horizontal rail of handsets — the whole set is meant to be scanned
+     side by side, so it scrolls sideways rather than stacking. */
+  .rail {
+    display: flex;
+    gap: clamp(1.25rem, 3vw, 2.5rem);
+    align-items: flex-start;
+    overflow-x: auto;
+    padding: clamp(1.5rem, 4vw, 3rem) clamp(1rem, 4vw, 2.5rem) clamp(2.5rem, 5vw, 4rem);
+    scroll-snap-type: x proximity;
+  }
+
+  .unit { flex: none; scroll-snap-align: center; }
+
+  .label {
+    display: flex;
+    align-items: baseline;
+    gap: 0.6rem;
+    margin-bottom: 0.9rem;
+    padding-left: 0.15rem;
+  }
+  .label .n {
+    font-family: "Bodoni Moda", Didot, serif;
+    font-size: 0.75rem;
+    color: var(--brass);
+    font-variant-numeric: tabular-nums;
+  }
+  .label .t {
+    font-size: 0.8125rem;
+    font-weight: 400;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+  .label .f { font-size: 0.75rem; color: var(--muted); margin-left: auto; }
+
+  /* The bezel is chrome around the real thing; the frame inside stays at a
+     true 390px so the site's own phone breakpoints resolve honestly. */
+  .phone {
+    position: relative;
+    width: calc(var(--phone-w) * var(--scale));
+    height: calc(var(--phone-h) * var(--scale));
+    border-radius: 34px;
+    padding: 8px;
+    background: #17141d;
+    box-shadow:
+      0 0 0 1px rgba(242, 236, 227, 0.09),
+      0 24px 60px -18px rgba(0, 0, 0, 0.9);
+  }
+  .screen {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    border-radius: 27px;
+    overflow: hidden;
+    background: var(--ink);
+  }
+  .screen iframe {
+    width: var(--phone-w);
+    height: var(--phone-h);
+    border: 0;
+    display: block;
+    transform: scale(var(--scale));
+    transform-origin: top left;
+  }
+  .notch {
+    position: absolute;
+    top: 7px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 62px;
+    height: 5px;
+    border-radius: 3px;
+    background: rgba(0, 0, 0, 0.55);
+    z-index: 2;
+    pointer-events: none;
+  }
+
+  .hint {
+    padding: 0 clamp(1rem, 4vw, 2.5rem) clamp(2.5rem, 5vw, 4rem);
+    font-size: 0.8125rem;
+    color: var(--muted);
+    max-width: 46rem;
+  }
+  .hint a { color: var(--brass); }
+
+  @media (max-width: 40rem) {
+    :root { --scale: 0.62; }
+    .rail { scroll-snap-type: x mandatory; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .rail { scroll-behavior: auto; }
+  }
+</style>
+</head>
+<body>
+
+<header class="head">
+  <div>
+    <p class="eyebrow">bouzoukidetroit.com</p>
+    <h1>Phone check</h1>
+  </div>
+  <p class="meta">
+    All eight pages at a true <strong>390&nbsp;px</strong> viewport, so the site's own
+    phone breakpoints resolve honestly. Each screen scrolls and taps like the real thing.
+  </p>
+</header>
+
+<div class="rail" id="rail"></div>
+
+<p class="hint" id="hint">Loading handsets&hellip;</p>
+
+<script>
+  var PAGES = [
+    ['index.html',   'Home',          'the lockup, the ribbon'],
+    ['club.html',    'The Club',      'four corners'],
+    ['nights.html',  'Nights',        'swipeable night cards'],
+    ['vip.html',     'VIP',           'tiers stack to one column'],
+    ['menu.html',    'Bar & Kitchen', 'leader-dot menu'],
+    ['gallery.html', 'Gallery',       'mosaic goes two-up'],
+    ['careers.html', 'Auditions',     'brass marquee'],
+    ['visit.html',   'Visit',         'hours, map, FAQ']
+  ];
+
+  // Same-origin as the frames, so seeding these here means the age gate and the
+  // preloader are already satisfied by the time the eight iframes boot. Without
+  // it every handset would open on the 21+ panel instead of the page.
+  try { localStorage.setItem('bz.age.ok', '1'); } catch (e) {}
+  try { sessionStorage.setItem('bz.booted', '1'); } catch (e) {}
+
+  var rail = document.getElementById('rail');
+
+  PAGES.forEach(function (page, i) {
+    var file = page[0], name = page[1], note = page[2];
+
+    var unit = document.createElement('div');
+    unit.className = 'unit';
+
+    var label = document.createElement('div');
+    label.className = 'label';
+    var n = document.createElement('span');
+    n.className = 'n';
+    n.textContent = String(i + 1).padStart(2, '0');
+    var t = document.createElement('span');
+    t.className = 't';
+    t.textContent = name;
+    var f = document.createElement('span');
+    f.className = 'f';
+    f.textContent = note;
+    label.appendChild(n);
+    label.appendChild(t);
+    label.appendChild(f);
+
+    var phone = document.createElement('div');
+    phone.className = 'phone';
+    var screen = document.createElement('div');
+    screen.className = 'screen';
+    var notch = document.createElement('span');
+    notch.className = 'notch';
+
+    var frame = document.createElement('iframe');
+    frame.src = file;
+    frame.title = name + ' — phone preview';
+    // Eight full page loads at once is a lot; let the browser defer the
+    // ones that are still off to the right.
+    frame.loading = i < 3 ? 'eager' : 'lazy';
+
+    screen.appendChild(notch);
+    screen.appendChild(frame);
+    phone.appendChild(screen);
+    unit.appendChild(label);
+    unit.appendChild(phone);
+    rail.appendChild(unit);
+  });
+
+  document.getElementById('hint').innerHTML =
+    'Scroll the rail sideways for the rest. Each handset is live — scroll inside it, ' +
+    'tap the burger, open the menu. To see it at full size instead, open ' +
+    '<a href="index.html">the site itself</a> and narrow the window.';
+</script>
+
+</body>
+</html>

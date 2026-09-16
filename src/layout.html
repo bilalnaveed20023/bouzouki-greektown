@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{{TITLE}}</title>
+<meta name="description" content="{{DESC}}">
+<meta name="theme-color" content="#07060a">
+<meta name="rating" content="adult">
+<meta name="robots" content="index, follow, max-image-preview:large">
+<link rel="canonical" href="https://bouzoukidetroit.com/{{CANON}}">
+
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Bouzouki Greektown">
+<meta property="og:title" content="{{TITLE}}">
+<meta property="og:description" content="{{DESC}}">
+<meta property="og:url" content="https://bouzoukidetroit.com/{{CANON}}">
+<meta property="og:image" content="https://bouzoukidetroit.com/assets/img/logo-bouzouki.jpg">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:site" content="@bouzoukilounge">
+<meta name="twitter:title" content="{{TITLE}}">
+<meta name="twitter:description" content="{{DESC}}">
+
+<link rel="icon" href="assets/img/logo-bouzouki.jpg">
+<link rel="apple-touch-icon" href="assets/img/logo-bouzouki.jpg">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400..900;1,6..96,400..900&family=Jost:wght@200;300;400;500;600&family=Yellowtail&display=swap">
+<link rel="stylesheet" href="assets/css/site.css">
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "NightClub",
+  "@id": "https://bouzoukidetroit.com/#club",
+  "name": "Bouzouki Greektown",
+  "alternateName": ["Bouzouki Lounge", "Bouzouki Gentlemen's Club"],
+  "description": "Detroit's Greektown gentlemen's club. Topless entertainment, full bar, late kitchen and VIP bottle service at 432 E Lafayette Blvd.",
+  "url": "https://bouzoukidetroit.com/",
+  "telephone": "+1-313-964-5744",
+  "email": "markbouzouki@gmail.com",
+  "image": "https://bouzoukidetroit.com/assets/img/logo-bouzouki.jpg",
+  "logo": "https://bouzoukidetroit.com/assets/img/logo-bouzouki.jpg",
+  "priceRange": "$$",
+  "currenciesAccepted": "USD",
+  "paymentAccepted": "Cash, Credit Card, ATM on site",
+  "smokingAllowed": false,
+  "address": {
+    "@type": "PostalAddress",
+    "streetAddress": "432 E Lafayette Blvd",
+    "addressLocality": "Detroit",
+    "addressRegion": "MI",
+    "postalCode": "48226",
+    "addressCountry": "US"
+  },
+  "geo": { "@type": "GeoCoordinates", "latitude": 42.3337, "longitude": -83.0410 },
+  "areaServed": { "@type": "City", "name": "Detroit" },
+  "openingHoursSpecification": [
+    { "@type": "OpeningHoursSpecification", "dayOfWeek": ["Tuesday","Wednesday","Thursday","Friday","Saturday"], "opens": "18:00", "closes": "02:00" },
+    { "@type": "OpeningHoursSpecification", "dayOfWeek": "Sunday", "opens": "20:00", "closes": "02:00" }
+  ],
+  "sameAs": [
+    "https://www.instagram.com/bouzoukilounge/",
+    "https://www.instagram.com/bouzoukigreektown/",
+    "https://x.com/bouzoukilounge",
+    "https://www.facebook.com/bouzoukidetroit/"
+  ]
+}
+</script>
+</head>
+<body data-page="{{SLUG}}">
+
+<a class="skip-link" href="#main">Skip to content</a>
+
+<!-- Film grain + vignette -->
+<div class="film" aria-hidden="true"></div>
+<div class="curtain" aria-hidden="true"><div class="curtain__mark mark"></div></div>
+
+<!-- SVG sprite: the column from the club's mark, plus iconography -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false"><defs>
+  <symbol id="i-column" viewBox="0 0 100 400">
+    <g fill="none" stroke="currentColor" stroke-width="2.4">
+      <rect x="6" y="2" width="88" height="13"/>
+      <path d="M13 15h74M17 26h66"/>
+      <rect x="17" y="26" width="66" height="11"/>
+      <rect x="22" y="37" width="56" height="326"/>
+      <path d="M31 37v326M40 37v326M49 37v326M58 37v326M67 37v326"/>
+      <rect x="17" y="363" width="66" height="11"/>
+      <path d="M13 374h74"/>
+      <rect x="6" y="385" width="88" height="13"/>
+    </g>
+  </symbol>
+  <!-- The two dancers, vectorised from the gold watermark on stage-floor.jpg.
+       That mark is 463px wide against the 150px Instagram avatar the first
+       trace used, and being a flat gold overlay it isolates on a COLOUR test
+       rather than luminance, which is far cleaner. Pipeline: gold threshold ->
+       largest connected component -> Moore-neighbour boundary walk ->
+       flood-fill from the border to find enclosed holes -> Douglas-Peucker ->
+       Catmull-Rom beziers; outer contour and hole in one path, fill-rule evenodd.
+       Each dancer is fused to her own side's column bar in the artwork, so the
+       trace regions are cut at x=170 and x=223 -- measured from the coverage
+       profile, where the two bars sit at 171-195 and 200-222 at full coverage.
+       That flat inner edge is exactly where figure meets column, so the
+       divider's figure-column-figure lockup still butts together. -->
+  <symbol id="i-fig-l" viewBox="0 0 100 237.44"><path fill="currentColor" fill-rule="evenodd" d="M72.51 0.00C73.14 0.00 74.49 -0.71 76.30 0.00C78.12 0.71 81.83 3.63 83.41 4.27C84.99 4.90 86.18 4.42 85.78 3.79C85.39 3.16 80.33 0.79 81.04 0.47C81.75 0.16 87.91 0.71 90.05 1.90C92.18 3.08 93.52 5.85 93.84 7.58C94.15 9.32 91.79 10.90 91.94 12.32C92.10 13.74 94.31 14.38 94.79 16.11C95.26 17.85 95.02 21.09 94.79 22.75C94.55 24.41 94.31 24.88 93.36 26.07C92.42 27.25 89.65 28.99 89.10 29.86C88.55 30.73 90.21 30.65 90.05 31.28C89.89 31.91 88.07 33.18 88.15 33.65C88.23 34.12 90.13 33.81 90.52 34.12C90.92 34.44 91.00 35.15 90.52 35.55C90.05 35.94 88.31 35.86 87.68 36.49C87.05 37.12 86.57 37.91 86.73 39.34C86.89 40.76 87.20 42.65 88.63 45.02C90.05 47.39 93.52 50.71 95.26 53.55C97.00 56.40 98.26 47.87 99.05 62.09C99.84 76.30 100.55 127.49 100.00 138.86C99.45 150.24 96.68 133.97 95.73 130.33C94.79 126.70 95.10 120.54 94.31 117.06C93.52 113.59 91.39 114.06 91.00 109.48C90.60 104.90 92.89 94.79 91.94 89.57C91.00 84.36 86.57 80.88 85.31 78.20C84.04 75.51 84.91 74.09 84.36 73.46C83.81 72.83 84.20 71.48 81.99 74.41C79.78 77.33 72.75 86.97 71.09 91.00C69.43 95.02 70.77 95.97 72.04 98.58C73.30 101.18 77.17 103.95 78.67 106.64C80.17 109.32 80.81 111.93 81.04 114.69C81.28 117.46 80.88 121.01 80.09 123.22C79.30 125.43 77.73 126.70 76.30 127.96C74.88 129.23 72.20 130.02 71.56 130.81C70.93 131.60 72.59 130.02 72.51 132.70C72.43 135.39 72.12 142.10 71.09 146.92C70.06 151.74 67.30 157.90 66.35 161.61C65.40 165.32 65.56 166.51 65.40 169.19C65.24 171.88 64.85 174.64 65.40 177.73C65.96 180.81 68.48 182.39 68.72 187.68C68.96 192.97 65.88 204.74 66.82 209.48C67.77 214.22 73.14 214.61 74.41 216.11C75.67 217.61 75.04 217.30 74.41 218.48C73.78 219.67 71.41 221.17 70.62 223.22C69.83 225.28 71.17 228.44 69.67 230.81C68.17 233.18 63.43 236.33 61.61 237.44C59.79 238.55 59.32 237.76 58.77 237.44C58.21 237.12 57.74 236.81 58.29 235.55C58.85 234.28 61.69 231.99 62.09 229.86C62.48 227.73 60.90 225.99 60.66 222.75C60.43 219.51 61.53 215.01 60.66 210.43C59.79 205.85 56.56 199.45 55.45 195.26C54.34 191.07 54.90 188.23 54.03 185.31C53.16 182.39 51.82 180.57 50.24 177.73C48.66 174.88 46.60 171.09 44.55 168.25C42.50 165.40 41.71 164.14 37.91 160.66C34.12 157.19 27.49 151.34 21.80 147.39C16.11 143.44 7.27 139.18 3.79 136.97C0.32 134.76 1.58 135.47 0.95 134.12C0.32 132.78 -0.47 130.73 0.00 128.91C0.47 127.09 0.08 125.75 3.79 123.22C7.50 120.70 16.51 116.11 22.27 113.74C28.04 111.37 34.12 109.95 38.39 109.00C42.65 108.06 45.73 108.61 47.87 108.06C50.00 107.50 50.63 106.71 51.18 105.69C51.74 104.66 51.66 103.63 51.18 101.90C50.71 100.16 48.82 98.26 48.34 95.26C47.87 92.26 47.95 86.97 48.34 83.89C48.74 80.81 50.08 77.80 50.71 76.78C51.34 75.75 51.03 77.73 52.13 77.73C53.24 77.73 57.27 77.01 57.35 76.78C57.42 76.54 53.95 76.94 52.61 76.30C51.26 75.67 50.08 74.33 49.29 72.99C48.50 71.64 48.03 69.75 47.87 68.25C47.71 66.75 47.87 65.40 48.34 63.98C48.82 62.56 48.66 60.90 50.71 59.72C52.76 58.53 57.90 58.14 60.66 56.87C63.43 55.61 65.32 53.00 67.30 52.13C69.27 51.26 70.93 52.53 72.51 51.66C74.09 50.79 76.38 48.58 76.78 46.92C77.17 45.26 76.70 42.42 74.88 41.71C73.06 41.00 67.61 42.73 65.88 42.65C64.14 42.58 65.01 42.34 64.45 41.23C63.90 40.13 63.27 37.20 62.56 36.02C61.85 34.83 60.51 35.39 60.19 34.12C59.87 32.86 60.90 30.09 60.66 28.44C60.43 26.78 57.82 25.83 58.77 24.17C59.72 22.51 64.38 18.72 66.35 18.48C68.33 18.25 69.19 21.96 70.62 22.75C72.04 23.54 74.96 23.54 74.88 23.22C74.80 22.91 71.48 22.12 70.14 20.85C68.80 19.59 68.01 15.72 66.82 15.64C65.64 15.56 64.06 19.43 63.03 20.38C62.01 21.33 61.93 21.09 60.66 21.33C59.40 21.56 56.64 22.35 55.45 21.80C54.27 21.25 53.40 19.75 53.55 18.01C53.71 16.27 54.90 13.35 56.40 11.37C57.90 9.40 60.82 7.19 62.56 6.16C64.30 5.13 65.48 4.66 66.82 5.21C68.17 5.77 69.51 8.77 70.62 9.48C71.72 10.19 72.83 9.64 73.46 9.48C74.09 9.32 74.80 8.77 74.41 8.53C74.01 8.29 72.12 8.77 71.09 8.06C70.06 7.35 68.01 5.61 68.25 4.27C68.48 2.92 71.80 0.71 72.51 0.00C73.22 -0.71 71.88 0.00 72.51 0.00ZM50.24 128.91C49.92 131.20 48.50 137.36 48.34 142.65C48.18 147.95 50.32 159.00 49.29 160.66C48.26 162.32 44.39 156.08 42.18 152.61C39.97 149.13 38.70 143.29 36.02 139.81C33.33 136.33 25.59 133.10 26.07 131.75C26.54 130.41 34.83 132.23 38.86 131.75C42.89 131.28 48.34 129.38 50.24 128.91C52.13 128.44 50.55 126.62 50.24 128.91Z"/></symbol>
+  <symbol id="i-fig-r" viewBox="0 0 100 229.82"><path fill="currentColor" fill-rule="evenodd" d="M22.02 0.00C22.55 0.00 24.08 -0.38 25.23 0.00C26.38 0.38 28.29 1.30 28.90 2.29C29.51 3.29 29.59 5.05 28.90 5.96C28.21 6.88 25.46 7.26 24.77 7.80C24.08 8.33 24.16 9.10 24.77 9.17C25.38 9.25 27.45 8.94 28.44 8.26C29.43 7.57 29.66 5.50 30.73 5.05C31.80 4.59 33.26 4.82 34.86 5.50C36.47 6.19 38.84 7.42 40.37 9.17C41.90 10.93 43.65 14.22 44.04 16.06C44.42 17.89 43.35 19.42 42.66 20.18C41.97 20.95 41.06 20.72 39.91 20.64C38.76 20.57 37.23 20.72 35.78 19.72C34.33 18.73 32.34 14.76 31.19 14.68C30.05 14.60 30.12 18.04 28.90 19.27C27.68 20.49 24.62 21.41 23.85 22.02C23.09 22.63 23.70 22.94 24.31 22.94C24.92 22.94 26.30 22.94 27.52 22.02C28.75 21.10 30.28 17.58 31.65 17.43C33.03 17.28 34.40 20.26 35.78 21.10C37.16 21.94 39.53 21.71 39.91 22.48C40.29 23.24 38.30 24.08 38.07 25.69C37.84 27.29 38.84 30.73 38.53 32.11C38.23 33.49 36.93 32.65 36.24 33.94C35.55 35.24 35.09 38.69 34.40 39.91C33.72 41.13 33.72 41.21 32.11 41.28C30.50 41.36 26.30 40.14 24.77 40.37C23.24 40.60 23.24 41.74 22.94 42.66C22.63 43.58 22.40 44.72 22.94 45.87C23.47 47.02 24.54 48.78 26.15 49.54C27.75 50.31 30.28 49.54 32.57 50.46C34.86 51.38 37.31 53.98 39.91 55.05C42.51 56.12 46.56 56.35 48.17 56.88C49.77 57.42 48.93 57.11 49.54 58.26C50.15 59.40 51.76 61.77 51.83 63.76C51.91 65.75 50.76 68.65 50.00 70.18C49.24 71.71 48.39 72.32 47.25 72.94C46.10 73.55 42.81 73.78 43.12 73.85C43.43 73.93 47.48 72.09 49.08 73.39C50.69 74.69 52.29 78.52 52.75 81.65C53.21 84.79 52.37 89.37 51.83 92.20C51.30 95.03 49.85 97.02 49.54 98.62C49.24 100.23 49.54 101.07 50.00 101.83C50.46 102.60 50.69 102.91 52.29 103.21C53.90 103.52 55.81 102.98 59.63 103.67C63.46 104.36 69.65 105.50 75.23 107.34C80.81 109.17 89.14 112.61 93.12 114.68C97.09 116.74 97.94 117.97 99.08 119.72C100.23 121.48 100.15 123.70 100.00 125.23C99.85 126.76 101.99 125.99 98.17 128.90C94.34 131.80 83.10 138.00 77.06 142.66C71.02 147.32 65.21 153.44 61.93 156.88C58.64 160.32 59.33 159.71 57.34 163.30C55.35 166.90 51.38 174.39 50.00 178.44C48.62 182.49 50.00 183.49 49.08 187.61C48.17 191.74 45.34 197.32 44.50 203.21C43.65 209.10 43.65 219.11 44.04 222.94C44.42 226.76 46.33 225.31 46.79 226.15C47.25 226.99 46.94 227.52 46.79 227.98C46.64 228.44 46.56 228.90 45.87 228.90C45.18 228.90 44.27 228.98 42.66 227.98C41.06 226.99 37.39 224.92 36.24 222.94C35.09 220.95 36.54 218.12 35.78 216.06C35.02 213.99 32.26 211.85 31.65 210.55C31.04 209.25 31.04 209.56 32.11 208.26C33.18 206.96 37.08 204.89 38.07 202.75C39.07 200.61 38.46 197.94 38.07 195.41C37.69 192.89 36.16 190.21 35.78 187.61C35.40 185.02 35.32 182.57 35.78 179.82C36.24 177.06 38.23 174.85 38.53 171.10C38.84 167.35 38.69 162.00 37.61 157.34C36.54 152.68 33.33 148.39 32.11 143.12C30.89 137.84 31.65 129.28 30.28 125.69C28.90 122.09 25.54 123.62 23.85 121.56C22.17 119.50 20.80 115.21 20.18 113.30C19.57 111.39 19.72 111.70 20.18 110.09C20.64 108.49 21.33 106.35 22.94 103.67C24.54 100.99 28.59 96.48 29.82 94.04C31.04 91.59 32.19 92.74 30.28 88.99C28.36 85.24 20.64 74.39 18.35 71.56C16.06 68.73 17.13 70.87 16.51 72.02C15.90 73.17 15.67 76.22 14.68 78.44C13.69 80.66 11.09 80.89 10.55 85.32C10.02 89.76 11.93 99.54 11.47 105.05C11.01 110.55 8.33 114.76 7.80 118.35C7.26 121.94 8.87 123.85 8.26 126.61C7.65 129.36 5.28 133.03 4.13 134.86C2.98 136.70 1.68 126.99 1.38 137.61C1.07 148.24 1.83 188.00 2.29 198.62C2.75 209.25 3.82 199.16 4.13 201.38C4.43 203.59 3.82 209.71 4.13 211.93C4.43 214.14 5.81 213.91 5.96 214.68C6.12 215.44 4.74 216.06 5.05 216.51C5.35 216.97 7.26 215.52 7.80 217.43C8.33 219.34 8.56 225.92 8.26 227.98C7.95 230.05 7.34 229.51 5.96 229.82C4.59 230.12 0.99 256.35 0.00 229.82C-0.99 203.29 0.00 94.88 0.00 70.64C0.00 46.41 -0.15 81.96 0.00 84.40C0.15 86.85 0.61 85.32 0.92 85.32C1.22 85.32 1.53 85.63 1.83 84.40C2.14 83.18 2.75 81.73 2.75 77.98C2.75 74.24 1.38 66.21 1.83 61.93C2.29 57.65 3.82 55.50 5.50 52.29C7.19 49.08 10.70 45.03 11.93 42.66C13.15 40.29 13.30 39.53 12.84 38.07C12.39 36.62 9.40 34.79 9.17 33.94C8.94 33.10 11.31 33.41 11.47 33.03C11.62 32.65 10.24 32.26 10.09 31.65C9.94 31.04 11.31 30.43 10.55 29.36C9.79 28.29 6.50 26.30 5.50 25.23C4.51 24.16 4.74 24.39 4.59 22.94C4.43 21.48 4.20 18.27 4.59 16.51C4.97 14.76 6.80 13.76 6.88 12.39C6.96 11.01 5.28 9.40 5.05 8.26C4.82 7.11 4.89 6.50 5.50 5.50C6.12 4.51 6.96 2.98 8.72 2.29C10.47 1.61 15.75 0.84 16.06 1.38C16.36 1.91 11.77 4.05 10.55 5.50C9.33 6.96 8.87 8.72 8.72 10.09C8.56 11.47 9.02 12.84 9.63 13.76C10.24 14.68 12.31 15.98 12.39 15.60C12.46 15.21 10.32 12.77 10.09 11.47C9.86 10.17 10.40 8.94 11.01 7.80C11.62 6.65 11.93 5.89 13.76 4.59C15.60 3.29 20.64 0.76 22.02 0.00C23.39 -0.76 21.48 0.00 22.02 0.00ZM51.38 123.85C52.83 124.16 56.12 125.38 60.09 125.69C64.07 125.99 74.16 124.54 75.23 125.69C76.30 126.83 68.88 129.36 66.51 132.57C64.14 135.78 63.07 141.44 61.01 144.95C58.94 148.47 55.43 156.27 54.13 153.67C52.83 151.07 53.67 134.33 53.21 129.36C52.75 124.39 51.68 124.77 51.38 123.85C51.07 122.94 49.92 123.55 51.38 123.85Z"/></symbol>
+  <symbol id="i-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6">
+    <path d="M4 12h15M13 6l6 6-6 6"/>
+  </symbol>
+  <symbol id="i-ig" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6">
+    <rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.2" cy="6.8" r="1.1" fill="currentColor" stroke="none"/>
+  </symbol>
+  <symbol id="i-x" viewBox="0 0 24 24" fill="currentColor">
+    <path d="M17.9 3H21l-6.7 7.6L21.6 21h-6.2l-4.4-6-5 6H2.9l7-8.1L2.6 3h6.3l4.1 5.6L17.9 3Zm-1.1 16h1.7L7.3 4.9H5.5L16.8 19Z"/>
+  </symbol>
+  <symbol id="i-fb" viewBox="0 0 24 24" fill="currentColor">
+    <path d="M13.5 21v-7.5h2.6l.4-3h-3V8.6c0-.9.3-1.5 1.5-1.5h1.6V4.4c-.3 0-1.3-.1-2.4-.1-2.4 0-4 1.4-4 4.1v2.1H7.5v3h2.6V21h3.4Z"/>
+  </symbol>
+  <symbol id="i-phone" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6">
+    <path d="M6 3h3l1.5 4.5-2 1.5a12 12 0 0 0 6.5 6.5l1.5-2L21 15v3a2 2 0 0 1-2.2 2A16 16 0 0 1 4 5.2 2 2 0 0 1 6 3Z"/>
+  </symbol>
+  <symbol id="i-pin" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6">
+    <path d="M12 21s7-5.7 7-11a7 7 0 1 0-14 0c0 5.3 7 11 7 11Z"/><circle cx="12" cy="10" r="2.6"/>
+  </symbol>
+  <symbol id="i-info" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6">
+    <circle cx="12" cy="12" r="9"/><path d="M12 11v6M12 7.6v.6"/>
+  </symbol>
+  <symbol id="i-clock" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6">
+    <circle cx="12" cy="12" r="9"/><path d="M12 7v5.4l3.6 2.2"/>
+  </symbol>
+</defs></svg>
+
+<!-- Preloader -->
+<div class="boot" id="boot">
+  <div class="boot__inner">
+    <div class="boot__mark mark" role="img" aria-label="Bouzouki Greektown"></div>
+    <div class="boot__bar"><i></i></div>
+    <div class="boot__pct">000</div>
+  </div>
+</div>
+
+<!-- Age gate -->
+<div class="gate" id="gate" hidden role="dialog" aria-modal="true" aria-label="Age verification">
+  <div class="gate__panel">
+    <div class="gate__mark mark" role="img" aria-label="Bouzouki Greektown"></div>
+    <p class="t-eyebrow">432 E Lafayette &middot; Greektown &middot; Detroit</p>
+    <p class="gate__age">21+</p>
+    <p class="t-lede" style="max-width:26rem">This is an adult entertainment venue. Confirm you are at least 21 years of age to enter.</p>
+    <button class="btn btn--solid" data-gate-yes type="button">I am 21 or older</button>
+    <button class="gate__deny" data-gate-no type="button">I am under 21</button>
+    <p class="gate__fine">Valid government-issued photo ID required at the door, every time, no exceptions. By entering you agree to our house rules.</p>
+  </div>
+</div>
+
+<!-- Nav -->
+<header class="nav">
+  <a class="nav__brand" href="index.html" aria-label="Bouzouki Greektown — home">
+    <span class="nav__brand-mark mark" aria-hidden="true"></span>
+    <span class="nav__brand-txt">
+      <span class="nav__brand-name">Bouzouki</span>
+      <span class="nav__brand-sub">Greektown</span>
+    </span>
+  </a>
+
+  <nav class="nav__links" aria-label="Primary">
+    <a class="nav__link" data-nav="club"    href="club.html">The Club</a>
+    <a class="nav__link" data-nav="nights"  href="nights.html">Nights</a>
+    <a class="nav__link" data-nav="vip"     href="vip.html">VIP &amp; Bottles</a>
+    <a class="nav__link" data-nav="menu"    href="menu.html">Bar &amp; Kitchen</a>
+    <a class="nav__link" data-nav="gallery" href="gallery.html">Gallery</a>
+    <a class="nav__link" data-nav="careers" href="careers.html">Auditions</a>
+    <a class="nav__link" data-nav="visit"   href="visit.html">Visit</a>
+  </nav>
+
+  <div class="nav__side">
+    <span class="status" data-status><i class="status__dot"></i><span data-status-text>&mdash;</span></span>
+    <a class="btn btn--sm nav__cta" href="vip.html">Reserve<svg class="btn__ico"><use href="#i-arrow"/></svg></a>
+    <button class="burger" aria-label="Menu" aria-expanded="false" aria-controls="menu" type="button"><i></i><i></i><i></i></button>
+  </div>
+</header>
+
+<!-- Fullscreen menu -->
+<div class="menu" id="menu" aria-hidden="true">
+  <ul class="menu__list">
+    <li class="menu__item"><a class="menu__a" href="index.html"><span class="menu__n">01</span> Home</a></li>
+    <li class="menu__item"><a class="menu__a" href="club.html"><span class="menu__n">02</span> The Club</a></li>
+    <li class="menu__item"><a class="menu__a" href="nights.html"><span class="menu__n">03</span> Nights</a></li>
+    <li class="menu__item"><a class="menu__a" href="vip.html"><span class="menu__n">04</span> VIP &amp; Bottles</a></li>
+    <li class="menu__item"><a class="menu__a" href="menu.html"><span class="menu__n">05</span> Bar &amp; Kitchen</a></li>
+    <li class="menu__item"><a class="menu__a" href="gallery.html"><span class="menu__n">06</span> Gallery</a></li>
+    <li class="menu__item"><a class="menu__a" href="careers.html"><span class="menu__n">07</span> Auditions</a></li>
+    <li class="menu__item"><a class="menu__a" href="visit.html"><span class="menu__n">08</span> Visit</a></li>
+  </ul>
+  <div class="menu__foot">
+    <address class="foot__addr">
+      432 E Lafayette Blvd<br>Detroit, MI 48226<br>
+      <a href="tel:+13139645744">(313) 964&#8209;5744</a>
+    </address>
+    <div class="u-stack" style="gap:.6rem">
+      <span class="t-label t-brass">Doors</span>
+      <span class="t-body" style="font-size:.875rem">Tue&ndash;Sat 6pm&ndash;2am<br>Sun 8pm&ndash;2am &middot; Mon dark</span>
+    </div>
+    <div class="socials">
+      <a class="social" href="https://www.instagram.com/bouzoukilounge/" target="_blank" rel="noopener" aria-label="Instagram"><svg><use href="#i-ig"/></svg></a>
+      <a class="social" href="https://x.com/bouzoukilounge" target="_blank" rel="noopener" aria-label="X"><svg><use href="#i-x"/></svg></a>
+      <a class="social" href="https://www.facebook.com/bouzoukidetroit/" target="_blank" rel="noopener" aria-label="Facebook"><svg><use href="#i-fb"/></svg></a>
+    </div>
+  </div>
+</div>
+
+<main id="main">
+{{BODY}}
+</main>
+
+<!-- Footer -->
+<footer class="foot">
+  <div class="atmo" aria-hidden="true"><span class="atmo__smoke atmo__smoke--b"></span></div>
+
+  <div class="wrap">
+    <div class="foot__grid">
+      <div class="foot__brand">
+        <span class="foot__mark mark" role="img" aria-label="Bouzouki Greektown"></span>
+        <p class="t-body" style="font-size:.875rem;max-width:22rem">
+          Greektown&rsquo;s after-dark institution since the neighbourhood&rsquo;s bouzouki-and-belly-dance days.
+          Full bar, late kitchen, and the best seat in downtown Detroit.
+        </p>
+        <div class="socials">
+          <a class="social" href="https://www.instagram.com/bouzoukilounge/" target="_blank" rel="noopener" aria-label="Instagram — @bouzoukilounge"><svg><use href="#i-ig"/></svg></a>
+          <a class="social" href="https://www.instagram.com/bouzoukigreektown/" target="_blank" rel="noopener" aria-label="Instagram — @bouzoukigreektown"><svg><use href="#i-ig"/></svg></a>
+          <a class="social" href="https://x.com/bouzoukilounge" target="_blank" rel="noopener" aria-label="X — @bouzoukilounge"><svg><use href="#i-x"/></svg></a>
+          <a class="social" href="https://www.facebook.com/bouzoukidetroit/" target="_blank" rel="noopener" aria-label="Facebook"><svg><use href="#i-fb"/></svg></a>
+        </div>
+      </div>
+
+      <div class="foot__col">
+        <p class="foot__h">The Club</p>
+        <a class="foot__l" href="club.html">The Room</a>
+        <a class="foot__l" href="nights.html">Nights &amp; Events</a>
+        <a class="foot__l" href="vip.html">VIP &amp; Bottle Service</a>
+        <a class="foot__l" href="menu.html">Bar &amp; Kitchen</a>
+        <a class="foot__l" href="gallery.html">Gallery</a>
+      </div>
+
+      <div class="foot__col">
+        <p class="foot__h">Visit</p>
+        <a class="foot__l" href="visit.html">Hours &amp; Directions</a>
+        <a class="foot__l" href="visit.html#parking">Parking</a>
+        <a class="foot__l" href="visit.html#rules">House Rules</a>
+        <a class="foot__l" href="visit.html#faq">FAQ</a>
+        <a class="foot__l" href="careers.html">Auditions &amp; Jobs</a>
+      </div>
+
+      <div class="foot__col">
+        <p class="foot__h">Find Us</p>
+        <address class="foot__addr">
+          432 E Lafayette Blvd<br>
+          Detroit, MI 48226<br><br>
+          <a href="tel:+13139645744">(313) 964&#8209;5744</a><br>
+          <a href="mailto:markbouzouki@gmail.com">markbouzouki@gmail.com</a>
+        </address>
+        <p class="t-label t-brass" style="margin-top:1.25rem">Doors</p>
+        <p class="t-body" style="font-size:.875rem;margin-top:.5rem">
+          Tue&ndash;Sat &nbsp;6:00 PM &ndash; 2:00 AM<br>
+          Sun &nbsp;8:00 PM &ndash; 2:00 AM<br>
+          <span style="color:var(--marble-faint)">Monday &mdash; dark</span>
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <p class="foot__wordmark" aria-hidden="true">Bouzouki</p>
+
+  <div class="wrap">
+    <div class="foot__bar">
+      <span>&copy; <span data-year>2026</span> Bouzouki Greektown &middot; 432 E Lafayette Blvd, Detroit</span>
+      <span>21+ &middot; Valid photo ID required &middot; Management reserves all rights</span>
+      <a href="visit.html#rules">House rules &amp; policies</a>
+    </div>
+  </div>
+</footer>
+
+<script src="assets/js/site.js" defer></script>
+</body>
+</html>

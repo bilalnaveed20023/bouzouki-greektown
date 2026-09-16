@@ -1,0 +1,47 @@
+Drop the club's photographs in this folder using EXACTLY these filenames.
+The site references them by name; until a file appears, that slot falls back
+to its vector composition, so nothing ever looks broken.
+
+  main-floor.jpg       The room at full tilt - patrons, poles, dancers, blue
+                       and red wash. Used as the homepage hero backdrop and the
+                       big 16:9 opener on the gallery. The most important one.
+
+  exterior-dusk.jpg    The building on Lafayette at dusk: red neon "Bouzouki"
+                       script on the pediment, the Greek columns, the blade
+                       sign. Establishing shot - homepage mosaic, gallery, and
+                       the backdrop of the Visit page.
+
+  stage-pole.jpg       A dancer at the pole on the main floor. Portrait
+                       orientation. Used on The Club page and a portrait
+                       gallery plate.
+
+  bar-service.jpg      Bartender working the lit bar top, chandelier above,
+                       purple wash. Homepage mosaic + gallery.
+
+  back-bar.jpg         The back bar: bottles, the game on the screen, the
+                       POS. Used for The Long Bar and "Top Shelf".
+
+  bar-room.jpg         Looking down the length of the bar - chandeliers,
+                       guests on stools, poles beyond. Gallery.
+
+  signs-night.jpg      The blade signs lit at night ("LIVE EXOTIC
+                       ENTERTAINMENT" over "Bouzouki FOOD & DRINK"). Used for
+                       "The Column" and "21 And Over".
+
+  bottle-sparkler.jpg  Servers carrying a bottle with a sparkler and a tray of
+                       drinks. Used on the homepage, the gallery, and the
+                       bottle-service section of the VIP page.
+
+NOT YET SUPPLIED - these two slots are still vector, and a photo would fill them:
+  kitchen.jpg          Anything from the kitchen. Flaming saganaki would be
+                       ideal - it is the dish the room is named around.
+  booth.jpg            A curtained VIP booth, occupied, curtain half drawn.
+
+SIZING
+  Export at roughly 2000px on the long edge, JPEG quality ~80. Every slot
+  crops with background-size: cover, so the subject wants to be near the
+  centre; where it is not, the markup uses a crop hint class
+  (.plate__img--top / --upper / --lower / --left / --right).
+
+The site dims and desaturates these on purpose so they sit with the brass and
+do not fight the type - do not pre-edit them for that, send them straight.

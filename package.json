@@ -1,0 +1,11 @@
+{
+  "name": "bouzouki-greektown",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Static site for Bouzouki Greektown, 432 E Lafayette Blvd, Detroit",
+  "scripts": {
+    "build": "node build.mjs",
+    "serve": "node build.mjs && python3 -m http.server 4620 --directory dist"
+  },
+  "engines": { "node": ">=18" }
+}

@@ -1,0 +1,6 @@
+# Build output — reproduced by `npm run build`, and the Pages workflow builds
+# it from source on every push. Nothing here is authored by hand.
+dist/
+
+.DS_Store
+node_modules/
