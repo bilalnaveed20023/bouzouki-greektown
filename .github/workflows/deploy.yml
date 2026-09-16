@@ -33,18 +33,30 @@ jobs:
       - name: Build
         run: node build.mjs
 
-      # This is a preview host, not the live domain. Keep it out of the index so
-      # it cannot compete with bouzoukidetroit.com for the club's own name once
-      # that goes live, and strip the sitemap that points at the real domain.
-      - name: Mark the preview as non-indexable
+      - uses: actions/configure-pages@v5
+        id: pages
+
+      # This is a preview host, not the live domain. Three fixes:
+      #  - noindex + a disallow-all robots.txt, so it cannot compete with
+      #    bouzoukidetroit.com for the club's own name once that goes live
+      #  - drop the sitemap, which points at the real domain
+      #  - repoint absolute og:/canonical URLs at this origin, otherwise a link
+      #    pasted to a client renders no preview card (the image 404s on a
+      #    domain that is not serving yet)
+      - name: Rewrite for the preview host
+        env:
+          BASE: ${{ steps.pages.outputs.base_url }}
         run: |
           printf 'User-agent: *\nDisallow: /\n' > dist/robots.txt
           rm -f dist/sitemap.xml
+          BASE="${BASE%/}"
           for f in dist/*.html; do
             perl -0pi -e 's{<meta name="robots" content="[^"]*">}{<meta name="robots" content="noindex, nofollow">}' "$f"
+            perl -0pi -e "s{https://bouzoukidetroit\\.com}{$BASE}g" "$f"
           done
+          echo "rewrote absolute URLs to $BASE"
+          grep -o 'og:image" content="[^"]*"' dist/index.html | head -1
 
-      - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
         with:
           path: dist
