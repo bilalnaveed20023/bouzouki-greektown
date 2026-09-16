@@ -682,26 +682,45 @@ ul, ol { list-style: none; }
 }
 
 /* Burger */
+/* Positioned absolutely rather than laid out on a grid, so the geometry is
+   explicit. The previous version used `place-items: center` on a grid, which
+   only centres each bar inside its own 1px row — it does not set
+   `align-content`, so the three tracks packed to the top of the box and the
+   icon sat high. It also moved the bars half the distance they needed to meet
+   (3px, where their centres are 6px apart), so the "X" never actually closed. */
 .burger {
   position: relative;
-  width: 46px; height: 46px;
-  border: 1px solid var(--hairline);
-  display: grid;
-  place-items: center;
-  gap: 5px;
-  grid-auto-rows: 1px;
-  transition: border-color 0.4s;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  border: 0;
+  background: none;
+  -webkit-tap-highlight-color: transparent;
 }
 @media (min-width: 70rem) { .burger { display: none; } }
-.burger:hover { border-color: var(--brass); }
+
 .burger i {
-  width: 18px; height: 1px;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 22px;
+  height: 1.5px;
+  margin: -0.75px 0 0 -11px;   /* true centre, allowing for the bar's own size */
   background: var(--marble);
-  transition: transform 0.5s var(--ease), opacity 0.3s;
+  border-radius: 2px;
+  transition: transform 0.45s var(--ease), opacity 0.25s var(--ease),
+              background-color 0.4s var(--ease);
 }
-.burger.is-open i:nth-child(1) { transform: translateY(3px) rotate(45deg); }
-.burger.is-open i:nth-child(2) { opacity: 0; }
-.burger.is-open i:nth-child(3) { transform: translateY(-3px) rotate(-45deg); }
+.burger i:nth-child(1) { transform: translateY(-7px); }
+.burger i:nth-child(3) { transform: translateY(7px); }
+
+.burger:hover i, .burger:focus-visible i { background: var(--brass-lit); }
+
+/* Both strokes return to dead centre before rotating, so they cross exactly
+   on the button's midpoint — a real X, not two offset diagonals. */
+.burger.is-open i:nth-child(1) { transform: translateY(0) rotate(45deg); }
+.burger.is-open i:nth-child(2) { opacity: 0; transform: scaleX(0.3); }
+.burger.is-open i:nth-child(3) { transform: translateY(0) rotate(-45deg); }
 
 /* ---------- 12. MENU OVERLAY -------------------------------------------- */
 .menu {
