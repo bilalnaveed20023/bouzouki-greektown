@@ -171,6 +171,25 @@ which is the intended use. Before launch confirm the photographer's rights are
 settled and that anyone identifiable in them is still content to appear — people
 leave, and a website is more permanent than an Instagram post.
 
+## The hero wordmark is solid on purpose
+
+"BOUZOUKI" used a metallic gradient via `background-clip: text` on each of its
+eight animated letters. On a real iPhone in Low Power Mode it rendered as "BOU"
+with the rest blank: WebKit intermittently fails to repaint clipped text on an
+element being composited mid-animation, and throttled frames widen the race.
+It could not be forced on a fast iOS simulator — which is what a race looks
+like — so the fragile combination was removed rather than tuned:
+
+- the letters are a solid fill; no `background-clip: text` on anything animated
+- once the reveal finishes, `lockup()` collapses the eight spans back into one
+  plain text node, so the resting state has no transforms and nothing the
+  `overflow: hidden` reveal clip could hide, whatever a throttled browser did
+  with the individual transitions
+- `font-kerning: none` on the word keeps that swap from shifting any letters
+
+`.gate__age` ("21+") still uses gradient text; it is static and has never
+shown the problem, but it is the same technique if it ever does.
+
 ## Marquees — pace them by width, never by a fixed duration
 
 `@keyframes slide` translates by `-100%` of the **track**, so with a fixed

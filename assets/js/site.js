@@ -281,6 +281,7 @@
     const word = $('[data-split]');
     if (word) {
       const text = word.textContent.trim();
+      word.dataset.text = text;
       word.setAttribute('aria-label', text);
       word.textContent = '';
       [...text].forEach((ch, i) => {
@@ -305,7 +306,15 @@
 
     // Longest char transition is 1.2s plus a 62ms-per-character stagger.
     const settleAfter = 1200 + 62 * ((word?.children.length || 8) + 1) + 200;
-    setTimeout(() => $('.lockup')?.classList.add('is-settled'), REDUCED ? 0 : settleAfter);
+    setTimeout(() => {
+      $('.lockup')?.classList.add('is-settled');
+      // Collapse the eight animated spans back into one plain text node. The
+      // final state then has no transforms and nothing for the overflow clip to
+      // hide, whatever a throttled browser did with the individual transitions —
+      // a letter whose transition was dropped can no longer stay parked below
+      // the clip. `font-kerning: none` keeps the swap visually seamless.
+      if (word && word.dataset.text) { word.textContent = word.dataset.text; }
+    }, REDUCED ? 0 : settleAfter);
   }
 
   /* ------------------------------------------------------------------------

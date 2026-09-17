@@ -1072,22 +1072,23 @@ ul, ol { list-style: none; }
   justify-content: center;
   overflow: hidden;
 }
+/* Solid fill, deliberately. This used a metallic gradient via
+   `background-clip: text` on each animated letter, and WebKit intermittently
+   fails to repaint clipped text on an element being composited mid-animation:
+   on an iPhone in Low Power Mode, where frames are throttled, the headline
+   rendered as "BOU" with the rest of the word blank. It could not be forced on
+   a fast simulator, which is the nature of a race — so the fragile combination
+   is gone rather than tuned. Do not put background-clip back on these. */
+.lockup__word { font-kerning: none; }   /* spans and the collapsed text node then set identically */
 .lockup__ch {
   display: inline-block;
   transform: translateY(105%) rotate(6deg);
   transition: transform 1.2s var(--ease);
   transition-delay: var(--d, 0ms);
-  color: var(--marble);
 }
-/* The metallic fill needs `color: transparent` to show, which would erase the
-   headline entirely if background-clip were unsupported. Gate it. */
-@supports ((-webkit-background-clip: text) or (background-clip: text)) {
-  .lockup__ch {
-    background: linear-gradient(176deg, #fffdf8 4%, var(--marble) 34%, #cfc6b8 74%, #a39a8d 100%);
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent;
-  }
+.lockup__word, .lockup__ch {
+  color: #f3ede3;
+  text-shadow: 0 1px 0 rgba(255, 253, 248, 0.08), 0 14px 40px rgba(4, 3, 6, 0.55);
 }
 .is-lit .lockup__ch { transform: translateY(0) rotate(0); }
 .lockup__script {
