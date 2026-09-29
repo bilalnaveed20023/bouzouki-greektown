@@ -1558,6 +1558,11 @@ ul, ol { list-style: none; }
   transition: transform 0.9s var(--ease) 0.25s, opacity 0.9s var(--ease) 0.25s;
 }
 .shot.is-on .shot__cap { transform: none; opacity: 1; }
+/* On a phone the arrows share the bottom edge with the caption: stop the
+   caption short of them so a long title wraps instead of running under. */
+@media (max-width: 47.99rem) {
+  .shot__cap { max-width: calc(100% - 8rem); }
+}
 .shot__t {
   font-family: var(--display);
   font-weight: 500;
