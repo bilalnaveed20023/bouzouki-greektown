@@ -54,6 +54,10 @@
   --ease-in-out: cubic-bezier(0.76, 0, 0.24, 1);
   --slow: 1.1s;
 
+  /* Height of the dancer pair on the preloader (shared by .stage and .boot). */
+  /* The set is ~1.07x as wide as tall, so a phone's width caps it too. */
+  --stage-h: min(clamp(13rem, 46vh, 28rem), 76vw);
+
   --logo: url("../img/logo-bouzouki.jpg");
 
   /* The room is dark and so is the site — there is no light theme. Declaring
@@ -81,23 +85,48 @@
 .fig--l { aspect-ratio: 100 / 237.44; }
 .fig--r { aspect-ratio: 100 / 229.82; }
 
-/* Hero: a pair framing the wordmark, exactly the composition of the mark. */
+/* Hero: a pair framing the wordmark, exactly the composition of the mark.
+   Two motions share each figure and must not fight, so they live on separate
+   properties: the entrance on `translate`/`scale` (transitioned), the scroll
+   on `transform` (untransitioned, so it tracks the finger 1:1). --sp is the
+   hero's scroll progress 0..1, written by heroFigs() in site.js: the pair
+   separates outward and recedes into the room, inner edges falling away like
+   the walls of a corridor. The wider translate is deliberate — perspective
+   pulls a receding figure toward the centre, so it has to travel further out
+   than it looks to read as separating at all. */
+.hero__figs {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  perspective: 1000px;
+  perspective-origin: 50% 58%;
+  opacity: calc(1 - var(--sp, 0) * 0.7);
+}
 .hero__fig {
+  --fig-o: 0.26;
+  --dir: -1;
   position: absolute;
   bottom: 0;
-  z-index: 1;
   height: clamp(19rem, 64vh, 42rem);
-  opacity: 0.16;
-  transform: translateY(12%) scale(0.97);
-  transition: opacity 1.6s var(--ease) 0.5s, transform 1.8s var(--ease) 0.5s;
+  opacity: 0;
+  translate: 0 12%;
+  scale: 0.97;
+  transform:
+    translate3d(calc(var(--dir) * var(--sp, 0) * 40vw), 0, calc(var(--sp, 0) * -420px))
+    rotateY(calc(var(--dir) * var(--sp, 0) * -28deg));
+  transition: opacity 1.6s var(--ease) 0.5s, translate 1.8s var(--ease) 0.5s, scale 1.8s var(--ease) 0.5s;
 }
 .hero__fig--l { left: clamp(-1rem, 2vw, 4rem); }
-.hero__fig--r { right: clamp(-1rem, 2vw, 4rem); }
-.is-lit .hero__fig { opacity: 0.16; transform: translateY(0) scale(1); }
+.hero__fig--r { right: clamp(-1rem, 2vw, 4rem); --dir: 1; }
+.is-lit .hero__fig { opacity: var(--fig-o); translate: none; scale: none; }
 @media (max-width: 47.99rem) {
-  .hero__fig { height: 44vh; opacity: 0.1; }
-  .is-lit .hero__fig { opacity: 0.1; }
+  .hero__fig { height: 44vh; --fig-o: 0.14; }
 }
+/* When the preloader's dancers fly in to take these places, the entrance is
+   theirs: these wait invisible in their final spot and appear under them. */
+.has-stage .hero__fig { opacity: 0; translate: none; scale: none; transition: opacity 0.5s linear; }
+.has-stage.stage-landed .hero__fig { opacity: var(--fig-o); }
 
 /* Divider: figure, column, figure — the mark, unpacked across the page. */
 .col-divider__fig {
@@ -435,15 +464,16 @@ ul, ol { list-style: none; }
   transition: opacity 0.7s var(--ease), visibility 0.7s;
 }
 .boot[hidden] { display: grid; opacity: 0; visibility: hidden; pointer-events: none; }
-.boot__inner { display: flex; flex-direction: column; align-items: center; gap: 2rem; }
-.boot__mark {
-  width: 128px; height: 128px;
-  opacity: 0;
-  transform: scale(0.9);
-  animation: bootMark 1.4s var(--ease) forwards;
-}
-@keyframes bootMark {
-  to { opacity: 1; transform: scale(1); }
+.boot.is-done .boot__inner { opacity: 0; transition: opacity 0.4s linear; }
+/* The dancers (.stage, below) stand over the middle of the screen; the bar and
+   count sit just under their feet, so the pair and the counter read as one
+   centred block. */
+.boot__inner {
+  position: absolute;
+  left: 50%;
+  top: calc(50% + var(--stage-h) * 0.4 + 2.25rem);
+  translate: -50% 0;
+  display: flex; flex-direction: column; align-items: center; gap: 1.25rem;
 }
 .boot__bar {
   width: clamp(9rem, 22vw, 15rem);
@@ -465,6 +495,73 @@ ul, ol { list-style: none; }
   letter-spacing: 0.3em;
   color: var(--brass);
   font-variant-numeric: tabular-nums;
+}
+
+/* ---------- 8b. THE STAGE (preloader dancers -> hero hand-off) ----------- */
+/* Above the preloader so the dancers survive its fade. */
+.stage {
+  position: fixed;
+  inset: 0;
+  z-index: 401;
+  pointer-events: none;
+  transition: opacity 0.5s linear;
+}
+.stage.is-gone { opacity: 0; }
+.stage__set {
+  position: absolute;
+  left: 50%;
+  top: calc(50% - var(--stage-h) * 0.6);
+  width: max-content;   /* else it shrink-wraps to the half-screen right of left:50% */
+  height: var(--stage-h);
+  display: flex;
+  align-items: flex-end;
+  translate: -50% 0;
+  perspective: 1100px;
+  animation: stageRise 1.4s var(--ease) both;
+}
+@keyframes stageRise {
+  from { opacity: 0; transform: translateY(7%); }
+}
+/* Outer span carries the flight (Web Animations), the inner svg the idle
+   turn — one transform each, so neither ever has to be read back mid-motion
+   from the other. Brass while it waits; it lands in the hero's marble. */
+.stage__fig {
+  display: block;
+  flex: none;
+  height: 100%;
+  color: var(--brass-lit);
+  perspective: 900px;
+  filter: drop-shadow(0 0 22px rgba(236, 209, 139, 0.28));
+}
+.stage__fig .fig {
+  height: 100%;
+  transform-origin: 50% 100%;
+  animation: stageTurnL 3.4s var(--ease-in-out) infinite alternate;
+}
+.stage__fig--r .fig { animation-name: stageTurnR; }
+@keyframes stageTurnL { from { transform: rotateY(22deg); } to { transform: rotateY(-10deg); } }
+@keyframes stageTurnR { from { transform: rotateY(-22deg); } to { transform: rotateY(10deg); } }
+.stage__col {
+  flex: none;
+  height: 96%;
+  width: auto;
+  aspect-ratio: 100 / 400;
+  margin: 0 calc(var(--stage-h) * -0.02);
+  color: var(--brass);
+}
+/* A pool of light on the boards under them. */
+.stage__floor {
+  position: absolute;
+  left: 50%;
+  top: calc(50% + var(--stage-h) * 0.4);
+  width: calc(var(--stage-h) * 1.5);
+  height: calc(var(--stage-h) * 0.16);
+  translate: -50% -50%;
+  background: radial-gradient(closest-side, rgba(200, 160, 74, 0.22), transparent);
+  animation: stageRise 1.4s var(--ease) both;
+}
+@media (prefers-reduced-motion: reduce) {
+  .stage__set, .stage__floor, .stage__fig .fig { animation: none; }
 }
 
 /* ---------- 9. AGE GATE ------------------------------------------------- */

@@ -109,14 +109,15 @@
     if (!el) { return Promise.resolve(); }
     // Once per session only. On internal navigation the page curtain covers the
     // hand-off, so replaying the whole preloader would double up and feel slow.
-    if (store.sget(BOOT_KEY) === '1') { el.remove(); return Promise.resolve(); }
+    if (store.sget(BOOT_KEY) === '1') { el.remove(); $('#stage')?.remove(); return Promise.resolve(); }
     store.sset(BOOT_KEY, '1');
+    if ($('#stage')) { document.documentElement.classList.add('has-stage'); }
     const bar = $('.boot__bar i', el);
     const pct = $('.boot__pct', el);
     lock();
 
     return new Promise((resolve) => {
-      const MIN = REDUCED ? 240 : 850;    // never flash past the mark
+      const MIN = REDUCED ? 240 : 1500;   // long enough to see the dancers turn
       const MAX = 2400;                   // never trap anyone behind it
       const t0 = performance.now();
       let assetsIn = false;
@@ -138,8 +139,10 @@
         if (done) { return; }
         done = true;
         paint(100);
-        el.hidden = true;
-        setTimeout(() => el.remove(), 800);
+        safe('stageSplit', stageSplit);
+        // The count goes, the dark stays: the dancers fly over it, and it
+        // lifts in bootOut() once whatever comes next (gate or page) is ready.
+        el.classList.add('is-done');
         resolve();
       };
 
@@ -156,6 +159,141 @@
       requestAnimationFrame(tick);
       setTimeout(finish, MAX + 120);  // belt and braces if rAF never runs
     });
+  }
+
+  function bootOut() {
+    const el = $('#boot');
+    if (!el) { return; }
+    el.hidden = true;
+    setTimeout(() => el.remove(), 800);
+  }
+
+  /* ------------------------------------------------------------------------
+     2b. THE STAGE — the mark's dancers hold centre while the preloader runs,
+     then split out, swinging back into depth on the way, and land exactly on
+     the hero's own figures, which take over underneath them. Pages without a
+     hero pair send them off either side instead.
+     --------------------------------------------------------------------- */
+  const FLIGHT_MS = 1900;
+  let stageFlight = null;     // settles when the flown dancers have landed
+  let stageTargets = [];      // where they land, for stageYield()
+  let stageStart = 0;
+
+  function stageSplit() {
+    const el = $('#stage');
+    if (!el) { return; }
+    const figs = $$('.stage__fig', el);
+    const heroFigs = $$('.hero__fig');
+    if (REDUCED || figs.length !== 2) {
+      el.classList.add('is-gone');
+      stageFlight = new Promise((r) => setTimeout(r, 500));
+      return;
+    }
+
+    // A throttled tab may not have finished the rise-in; measure from rest.
+    $$('.stage__set, .stage__floor', el).forEach((n) => n.getAnimations().forEach((a) => a.finish()));
+
+    stageStart = performance.now();
+    const W = innerWidth;
+    const flights = figs.map((fig, i) => {
+      const dir = i === 0 ? -1 : 1;
+      const from = fig.getBoundingClientRect();
+      const hero = heroFigs[i];
+      let to;
+      let endO = 0;
+      if (hero) {
+        to = hero.getBoundingClientRect();
+        endO = parseFloat(getComputedStyle(hero).getPropertyValue('--fig-o')) || 0.2;
+      } else {
+        // No hero pair: exit into the wings at the same size.
+        const x = dir < 0 ? -from.width * 1.3 : W + from.width * 0.3;
+        to = { left: x, top: from.top, width: from.width, height: from.height };
+      }
+      stageTargets[i] = to;
+
+      const dx = (to.left + to.width / 2) - (from.left + from.width / 2);
+      const dy = (to.top + to.height / 2) - (from.top + from.height / 2);
+      const s = to.height / from.height;
+
+      // Settle the idle turn from wherever it is, so the flight starts clean.
+      const inner = fig.firstElementChild;
+      const turn = getComputedStyle(inner).transform;
+      inner.style.animation = 'none';
+      inner.animate([{ transform: turn === 'none' ? 'none' : turn }, { transform: 'none' }],
+        { duration: 900, easing: 'cubic-bezier(0.22, 1, 0.36, 1)', fill: 'forwards' });
+
+      // Every keyframe uses the same function list so the path interpolates
+      // component by component, not through a matrix decomposition.
+      return fig.animate([
+        { transform: 'translate3d(0,0,0) rotateY(0deg) scale(1)', opacity: 1,
+          color: '#ecd18b', filter: 'drop-shadow(0 0 22px rgba(236,209,139,.28))' },
+        { offset: 0.5,
+          transform: `translate3d(${dx * 0.45}px, ${dy * 0.35}px, -320px) rotateY(${dir * -34}deg) scale(${1 + (s - 1) * 0.4})`,
+          opacity: Math.max(endO, 0.55) },
+        { transform: `translate3d(${dx}px, ${dy}px, 0) rotateY(0deg) scale(${s})`, opacity: endO,
+          color: '#f4eee5', filter: 'drop-shadow(0 0 0 rgba(236,209,139,0))' }
+      ], { duration: FLIGHT_MS, easing: 'cubic-bezier(0.65, 0, 0.25, 1)', fill: 'forwards' }).finished;
+    });
+
+    const col = $('.stage__col', el);
+    col?.animate([{ opacity: 1, transform: 'none' }, { opacity: 0, transform: 'translateY(8%) scaleY(0.9)' }],
+      { duration: 800, easing: 'cubic-bezier(0.22, 1, 0.36, 1)', fill: 'forwards' });
+    $('.stage__floor', el)?.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 700, fill: 'forwards' });
+
+    // Finished promises can hang in a backgrounded tab; the timer always lands it.
+    stageFlight = Promise.race([
+      Promise.all(flights).catch(() => {}),
+      new Promise((r) => setTimeout(r, FLIGHT_MS + 400))
+    ]);
+  }
+
+  /** Resolves once the dancers have cleared the middle of the screen, so the
+      age gate — or the hero headline — never appears underneath them mid-flight. */
+  function stageClear() {
+    if (!stageStart) { return Promise.resolve(); }
+    const left = stageStart + FLIGHT_MS * 0.55 - performance.now();
+    return new Promise((r) => setTimeout(r, Math.max(0, left)));
+  }
+
+  /** Called with the age gate up: if the landed dancers would sit on the
+      gate's text (narrow screens), they bow out now and the hero's own pair
+      fades in when the gate is passed. */
+  function stageYield() {
+    const el = $('#stage');
+    const panel = $('#gate:not([hidden]) .gate__panel');
+    if (!el || !panel) { return; }
+    const p = panel.getBoundingClientRect();
+    if (stageTargets.some((t) => t && t.left < p.right && t.left + t.width > p.left)) {
+      el.classList.add('is-gone');
+    }
+  }
+
+  /** Hand over to the hero figures once the flight is down and the page is open. */
+  function stageLand() {
+    const el = $('#stage');
+    if (!el) { return; }
+    (stageFlight || Promise.resolve()).then(() => {
+      document.documentElement.classList.add('stage-landed');
+      el.classList.add('is-gone');
+      setTimeout(() => el.remove(), 600);
+    });
+  }
+
+  /** Scroll drives the hero pair apart and back into the room (see .hero__fig). */
+  function heroFigs() {
+    const wrap = $('.hero__figs');
+    const hero = $('.hero');
+    if (!wrap || !hero || REDUCED) { return; }
+    let queued = false;
+    const paint = () => {
+      queued = false;
+      const p = Math.min(1, Math.max(0, scrollY / (hero.offsetHeight * 0.85)));
+      wrap.style.setProperty('--sp', p.toFixed(4));
+    };
+    addEventListener('scroll', () => {
+      if (!queued) { queued = true; requestAnimationFrame(paint); }
+    }, { passive: true });
+    paint();
   }
 
   /* ------------------------------------------------------------------------
@@ -740,10 +878,12 @@
 
     // The overlays are last and independently guarded — nothing above may
     // prevent the preloader and age gate from clearing.
+    safe('heroFigs', heroFigs);
     boot()
-      .then(gate)
+      .then(stageClear)
+      .then(() => { const open = gate(); safe('stageYield', stageYield); bootOut(); return open; })
       .catch((err) => { console.warn('[bouzouki] overlays failed', err); unlock(); })
-      .then(() => { safe('lockup', lockup); safe('reveals', reveals); });
+      .then(() => { safe('lockup', lockup); safe('reveals', reveals); safe('stageLand', stageLand); });
   }
 
   document.readyState === 'loading'

@@ -134,11 +134,23 @@
 </defs></svg>
 
 <!-- Preloader -->
-<div class="boot" id="boot">
+<div class="boot" id="boot" role="img" aria-label="Bouzouki Greektown">
   <div class="boot__inner">
-    <div class="boot__mark mark" role="img" aria-label="Bouzouki Greektown"></div>
     <div class="boot__bar"><i></i></div>
     <div class="boot__pct">000</div>
+  </div>
+</div>
+
+<!-- The mark, unpacked: its two dancers and the column hold centre stage while
+     the site loads, then split out to the hero's flanks and hand over to the
+     hero's own figures (stageSplit / stageLand in site.js). Its own layer so it
+     can outlive the preloader and flank the age gate. -->
+<div class="stage" id="stage" aria-hidden="true">
+  <span class="stage__floor"></span>
+  <div class="stage__set">
+    <span class="stage__fig stage__fig--l"><svg class="fig fig--l"><use href="#i-fig-l"/></svg></span>
+    <svg class="stage__col" viewBox="0 0 100 400"><use href="#i-column"/></svg>
+    <span class="stage__fig stage__fig--r"><svg class="fig fig--r"><use href="#i-fig-r"/></svg></span>
   </div>
 </div>
 
