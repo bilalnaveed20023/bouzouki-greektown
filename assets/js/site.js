@@ -109,9 +109,9 @@
     if (!el) { return Promise.resolve(); }
     // Once per session only. On internal navigation the page curtain covers the
     // hand-off, so replaying the whole preloader would double up and feel slow.
-    if (store.sget(BOOT_KEY) === '1') { el.remove(); $('#stage')?.remove(); return Promise.resolve(); }
+    if (store.sget(BOOT_KEY) === '1') { el.remove(); $('#intro-stage')?.remove(); return Promise.resolve(); }
     store.sset(BOOT_KEY, '1');
-    if ($('#stage')) { document.documentElement.classList.add('has-stage'); }
+    if ($('#intro-stage')) { document.documentElement.classList.add('has-stage'); }
     const bar = $('.boot__bar i', el);
     const pct = $('.boot__pct', el);
     lock();
@@ -180,7 +180,7 @@
   let stageStart = 0;
 
   function stageSplit() {
-    const el = $('#stage');
+    const el = $('#intro-stage');
     if (!el) { return; }
     const figs = $$('.stage__fig', el);
     const heroFigs = $$('.hero__fig');
@@ -259,7 +259,7 @@
       gate's text (narrow screens), they bow out now and the hero's own pair
       fades in when the gate is passed. */
   function stageYield() {
-    const el = $('#stage');
+    const el = $('#intro-stage');
     const panel = $('#gate:not([hidden]) .gate__panel');
     if (!el || !panel) { return; }
     const p = panel.getBoundingClientRect();
@@ -270,7 +270,7 @@
 
   /** Hand over to the hero figures once the flight is down and the page is open. */
   function stageLand() {
-    const el = $('#stage');
+    const el = $('#intro-stage');
     if (!el) { return; }
     (stageFlight || Promise.resolve()).then(() => {
       document.documentElement.classList.add('stage-landed');

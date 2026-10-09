@@ -1883,6 +1883,23 @@ ul, ol { list-style: none; }
   font-variant-numeric: tabular-nums;
   white-space: nowrap;
 }
+/* A list of names with no prices (the bar's pour list): two columns of
+   labels under a group heading, so a long list stays compact. */
+.mnames {
+  list-style: none;
+  margin: 0 0 2rem;
+  padding: 0;
+  columns: 2;
+  column-gap: 1.5rem;
+}
+.mnames li {
+  break-inside: avoid;
+  padding-block: 0.45rem;
+  border-bottom: 1px solid var(--hairline-2);
+  color: var(--marble);
+  font-size: 0.9375rem;
+}
+.mnames li em { font-style: normal; color: var(--marble-faint); font-size: 0.8125rem; }
 
 /* ---------- 22. PULL QUOTE / EDITORIAL ---------------------------------- */
 .pull {
