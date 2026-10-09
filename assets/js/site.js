@@ -25,17 +25,9 @@
 
   /* ------------------------------------------------------------------------
      1. TRADING HOURS  (authoritative: the club's own Instagram bio)
-     Tue–Sat 6pm–2am · Sun 8pm–2am · Mon closed. All times America/Detroit.
+     Open every day, 4pm–2am. All times America/Detroit.
      --------------------------------------------------------------------- */
-  const HOURS = [
-    { open: 20, close: 2 }, // Sun
-    null,                   // Mon — dark
-    { open: 18, close: 2 }, // Tue
-    { open: 18, close: 2 }, // Wed
-    { open: 18, close: 2 }, // Thu
-    { open: 18, close: 2 }, // Fri
-    { open: 18, close: 2 }  // Sat
-  ];
+  const HOURS = Array.from({ length: 7 }, () => ({ open: 16, close: 2 }));  // Sun..Sat
   const DAY_IX = { Sun: 0, Mon: 1, Tue: 2, Wed: 3, Thu: 4, Fri: 5, Sat: 6 };
 
   function detroitNow() {
