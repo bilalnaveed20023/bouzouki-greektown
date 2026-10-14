@@ -88,7 +88,7 @@ timer failsafe so it can never strand a visitor behind it.
   against `America/Detroit` from the hours table in `site.js`, and refresh every
   minute. Tonight's row is highlighted automatically in every hours table.
 - **Forms** (VIP reservation, job application, contact, mailing list) compose a
-  pre-filled email to `markbouzouki@gmail.com` and open the visitor's mail client.
+  pre-filled email to `yourgios@gmail.com` and open the visitor's mail client.
   This works from day one with no backend. To move to a real endpoint, give the
   `<form>` an `action` and delete its `data-mailto` attribute — `forms()` in
   `site.js` only intercepts forms that carry `data-mailto`.
