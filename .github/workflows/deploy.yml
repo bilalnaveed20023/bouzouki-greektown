@@ -36,25 +36,34 @@ jobs:
       - uses: actions/configure-pages@v5
         id: pages
 
-      # This is a preview host, not the live domain. Three fixes:
-      #  - noindex + a disallow-all robots.txt, so it cannot compete with
-      #    bouzoukidetroit.com for the club's own name once that goes live
-      #  - drop the sitemap, which points at the real domain
-      #  - repoint absolute og:/canonical URLs at this origin, otherwise a link
-      #    pasted to a client renders no preview card (the image 404s on a
-      #    domain that is not serving yet)
-      - name: Rewrite for the preview host
+      # The source carries https://bouzoukidetroit.com as a stand-in origin.
+      # Every deploy repoints it at wherever Pages is actually serving: the
+      # github.io preview today, the club's own domain once it is attached in
+      # Settings -> Pages (configure-pages then reports that domain as
+      # base_url). Only the github.io preview is hidden from search engines,
+      # so attaching the domain is the whole switch to "live" -- nothing in
+      # this file has to change.
+      - name: Point URLs at the serving origin
         env:
           BASE: ${{ steps.pages.outputs.base_url }}
         run: |
-          printf 'User-agent: *\nDisallow: /\n' > dist/robots.txt
-          rm -f dist/sitemap.xml
           BASE="${BASE%/}"
-          for f in dist/*.html; do
-            perl -0pi -e 's{<meta name="robots" content="[^"]*">}{<meta name="robots" content="noindex, nofollow">}' "$f"
-            perl -0pi -e "s{https://bouzoukidetroit\\.com}{$BASE}g" "$f"
+          for f in dist/*.html dist/sitemap.xml dist/robots.txt; do
+            if [ -f "$f" ]; then perl -0pi -e "s{https://bouzoukidetroit\\.com}{$BASE}g" "$f"; fi
           done
-          echo "rewrote absolute URLs to $BASE"
+          case "$BASE" in
+            *.github.io*)
+              # Preview: noindex + disallow-all so it can never compete with
+              # the real domain for the club's own name, and no sitemap.
+              printf 'User-agent: *\nDisallow: /\n' > dist/robots.txt
+              rm -f dist/sitemap.xml
+              for f in dist/*.html; do
+                perl -0pi -e 's{<meta name="robots" content="[^"]*">}{<meta name="robots" content="noindex, nofollow">}' "$f"
+              done
+              echo "preview host $BASE: noindex" ;;
+            *)
+              echo "live domain $BASE: indexable, sitemap kept" ;;
+          esac
           grep -o 'og:image" content="[^"]*"' dist/index.html | head -1
 
       - uses: actions/upload-pages-artifact@v3
