@@ -61,7 +61,7 @@
       return { open: true, line: 'Open now · until 2:00 AM' };
     }
     if (today && hour < today.open) {
-      return { open: false, line: `Doors at ${clock(today.open)} tonight` };
+      return { open: false, line: `Doors open at ${clock(today.open)} tonight` };
     }
     // Dark tonight — find the next night with hours.
     for (let i = 1; i <= 7; i++) {
